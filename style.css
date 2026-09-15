@@ -1,147 +1,71 @@
-body {
+* {
     margin: 0;
-    overflow: hidden;
-    background: #1a1a2e;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    user-select: none;
-}
-
-canvas {
-    display: block;
-    width: 100vw;
-    height: 100vh;
-}
-
-/* Contenedor UI superior */
-.ui-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 20px;
+    padding: 0;
     box-sizing: border-box;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    pointer-events: none; /* Permite clicks a través de las zonas vacías */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.info-panel {
-    background: rgba(15, 15, 35, 0.85);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 12px;
+body {
+    overflow: hidden;
+    background-color: #111;
+    color: #fff;
+}
+
+#ui-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    background: rgba(18, 18, 24, 0.85);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     max-width: 320px;
-    pointer-events: auto;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-}
-
-.info-panel h2 {
-    margin: 0 0 5px 0;
-    font-size: 20px;
-    color: #4e9eff;
-}
-
-.info-panel p {
-    margin: 5px 0;
-    font-size: 13px;
-    color: #cbd5e1;
-}
-
-.selection-box {
-    margin-top: 15px;
-    padding: 8px;
-    background: rgba(250, 0, 12, 0.15);
-    border-left: 4px solid #fa000c;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: bold;
-    color: #ff8c94;
-    transition: all 0.3s ease;
-}
-
-/* Botón de Cuestionario */
-.quiz-btn {
-    background: #4e9eff;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    pointer-events: auto;
-    box-shadow: 0 4px 15px rgba(78, 158, 255, 0.4);
-    transition: background 0.3s, transform 0.2s;
-}
-
-.quiz-btn:hover {
-    background: #357abd;
-    transform: translateY(-2px);
-}
-
-/* Modal del Cuestionario */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(10, 10, 25, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    transition: opacity 0.3s ease;
-}
-
-.modal.hidden {
-    display: none;
-    opacity: 0;
     pointer-events: none;
 }
 
-.modal-content {
-    background: #1e1e38;
-    color: #f1f5f9;
-    padding: 30px;
-    border-radius: 16px;
-    max-width: 650px;
-    max-height: 80vh;
-    overflow-y: auto;
-    position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-}
-
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 28px;
-    color: #94a3b8;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.close-btn:hover {
-    color: white;
-}
-
-.question {
-    margin-bottom: 20px;
-}
-
-.question h3 {
-    color: #4e9eff;
-    font-size: 16px;
+h1 {
+    font-size: 1.1rem;
+    font-weight: 600;
     margin-bottom: 6px;
+    color: #4facfe;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.question p {
-    font-size: 14px;
-    line-height: 1.5;
-    color: #cbd5e1;
-    margin: 0;
+#info-text {
+    font-size: 0.9rem;
+    color: #a0a0b0;
+}
+
+#object-details {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+#object-details.hidden {
+    display: none;
+}
+
+#detail-tag {
+    background: #00f2fe;
+    color: #000;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+#detail-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #ffffff;
 }

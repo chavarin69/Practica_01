@@ -2,195 +2,234 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-// 1. ESCENA, CÁMARA Y RENDERIZADOR
+// ==========================================
+// 1. ESCENA, CÁMARA Y RENDERER (Puntos 1, 2, 3)
+// ==========================================
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x1a1a2e);
+scene.background = new THREE.Color(0x12131C);
+scene.fog = new THREE.FogExp2(0x12131C, 0.03);
 
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 4, 7);
+const camera = new THREE.PerspectiveCamera(
+    60,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+);
+camera.position.set(0, 4, 9);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.shadowMap.enabled = true; // Habilitar sombras para realismo
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
-// 2. ORBIT CONTROLS
+// ==========================================
+// 2. CONTROLES DE ÓRBITA (Punto 7)
+// ==========================================
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
-controls.maxPolarAngle = Math.PI / 2 - 0.05; // Evita pasar por debajo del suelo
+controls.maxPolarAngle = Math.PI / 2 - 0.01;
 
-// 3. ILUMINACIÓN
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+// ==========================================
+// 3. ILUMINACIÓN (Punto 6)
+// ==========================================
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
 scene.add(ambientLight);
 
-const mainLight = new THREE.DirectionalLight(0xffffff, 0.8);
-mainLight.position.set(5, 8, 5);
-mainLight.castShadow = true;
-scene.add(mainLight);
+const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+dirLight.position.set(5, 8, 5);
+dirLight.castShadow = true;
+dirLight.shadow.mapSize.width = 2048;
+dirLight.shadow.mapSize.height = 2048;
+scene.add(dirLight);
 
-const fillLight = new THREE.PointLight(0x4e9eff, 0.6, 10);
-fillLight.position.set(-4, 3, -2);
-scene.add(fillLight);
+const pointLight = new THREE.PointLight(0x00f2fe, 2, 10);
+pointLight.position.set(-3, 2, -1);
+scene.add(pointLight);
 
-// Array para guardar los objetos interactivos para el Raycaster
-const interactiveObjects = [];
+// ==========================================
+// 4. GEOMETRÍAS Y MATERIALES (Puntos 4 y 5)
+// ==========================================
+const interactableObjects = [];
 
-// 4. AGREGAR GEOMETRÍAS BÁSICAS REQUERIDAS (Cubo, Esfera, Plano)
-
-// Plano (Suelo)
-const planeGeo = new THREE.PlaneGeometry(15, 15);
-const planeMat = new THREE.MeshStandardMaterial({ color: 0x2e2e4a, roughness: 0.8 });
+// A) Plano (Suelo)
+const planeGeo = new THREE.PlaneGeometry(20, 20);
+const planeMat = new THREE.MeshStandardMaterial({
+    color: 0x1e202e,
+    roughness: 0.8,
+    metalness: 0.2
+});
 const plane = new THREE.Mesh(planeGeo, planeMat);
 plane.rotation.x = -Math.PI / 2;
-plane.position.y = -1;
 plane.receiveShadow = true;
 scene.add(plane);
 
-// Cubo Animado
-const cubeGeo = new THREE.BoxGeometry(1.2, 1.2, 1.2);
-const cubeMat = new THREE.MeshStandardMaterial({ color: 0xFA000C, roughness: 0.3, metalness: 0.2 });
-const cube = new THREE.Mesh(cubeGeo, cubeMat);
-cube.position.set(-2, 0, 0);
-cube.name = "Cubo de Rubí";
-cube.castShadow = true;
-scene.add(cube);
-interactiveObjects.push(cube);
-
-// Esfera Animada
-const sphereGeo = new THREE.SphereGeometry(0.8, 32, 32);
-const sphereMat = new THREE.MeshStandardMaterial({ color: 0x00ffcc, roughness: 0.1, metalness: 0.8 });
-const sphere = new THREE.Mesh(sphereGeo, sphereMat);
-sphere.position.set(2, 0, 0);
-sphere.name = "Esfera de Plasma";
-sphere.castShadow = true;
-scene.add(sphere);
-interactiveObjects.push(sphere);
-
-// Rejilla de ayuda estética
-const gridHelper = new THREE.GridHelper(15, 15, 0x4e9eff, 0x2b2b44);
-gridHelper.position.y = -0.99;
+const gridHelper = new THREE.GridHelper(20, 20, 0x4facfe, 0x2a2d3d);
+gridHelper.position.y = 0.01;
 scene.add(gridHelper);
 
-// 5. CARGA DE MODELO 3D (.GLTF / .GLB)
-const loader = new GLTFLoader();
-// Cargamos un modelo de prueba público desde un CDN estable (el patito de goma estándar de Khronos)
-const modelUrl = 'https://githubusercontent.com';
+// B) Cubo
+const cubeGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+const cubeMat = new THREE.MeshStandardMaterial({
+    color: 0x4facfe,
+    roughness: 0.2,
+    metalness: 0.5
+});
+const cube = new THREE.Mesh(cubeGeo, cubeMat);
+cube.position.set(-2.5, 0.75, 0);
+cube.castShadow = true;
+cube.receiveShadow = true;
+cube.name = "Cubo Azul";
+scene.add(cube);
+interactableObjects.push(cube);
 
+// C) Esfera
+const sphereGeo = new THREE.SphereGeometry(1, 32, 32);
+const sphereMat = new THREE.MeshStandardMaterial({
+    color: 0xff0844,
+    roughness: 0.1,
+    metalness: 0.8
+});
+const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+sphere.position.set(2.5, 1, 0);
+sphere.castShadow = true;
+sphere.receiveShadow = true;
+sphere.name = "Esfera Roja";
+scene.add(sphere);
+interactableObjects.push(sphere);
+
+// D) Torus Knot (Objeto decorativo)
+const torusGeo = new THREE.TorusKnotGeometry(0.7, 0.2, 100, 16);
+const torusMat = new THREE.MeshStandardMaterial({
+    color: 0xffb199,
+    roughness: 0.3,
+    metalness: 0.7
+});
+const torus = new THREE.Mesh(torusGeo, torusMat);
+torus.position.set(0, 1.2, 2.5);
+torus.castShadow = true;
+torus.name = "Torus Knot Dorado";
+scene.add(torus);
+interactableObjects.push(torus);
+
+// ==========================================
+// 5. CARGAR MODELO 3D (.glb / .gltf) (Punto 9)
+// ==========================================
+const loader = new GLTFLoader();
 loader.load(
-    modelUrl,
+    'models/robot.glb',
     (gltf) => {
         const model = gltf.scene;
-        model.position.set(0, -1, 0); // Ajustar en el suelo
+        model.position.set(0, 0, -2);
         model.scale.set(0.8, 0.8, 0.8);
-        model.name = "Pato de Goma 3D (Cargado externamente)";
-        
-        // Hacer que los componentes del modelo hereden las propiedades de casteo de sombras e interactividad
+        model.name = "Modelo 3D Cargar (.glb)";
+
         model.traverse((child) => {
             if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-                // Guardamos la referencia del nombre del padre o del objeto en sí para el raycast
-                child.userData.parentName = model.name;
-                interactiveObjects.push(child);
+                child.name = child.name || "Parte del Modelo 3D";
             }
         });
-        
+
         scene.add(model);
-        console.log("✅ Modelo GLB cargado exitosamente.");
+        interactableObjects.push(model);
+        console.log("¡Modelo 3D cargado con éxito!", gltf);
     },
     (xhr) => {
-        console.log(`Cargando modelo: ${(xhr.loaded / xhr.total * 100).toFixed(2)}%`);
+        if (xhr.lengthComputable) {
+            console.log(`Cargando modelo: ${(xhr.loaded / xhr.total * 100).toFixed(1)}%`);
+        }
     },
     (error) => {
-        console.error("❌ Error al cargar el modelo:", error);
+        console.warn("Asegúrate de colocar tu archivo .glb dentro de la carpeta 'models/'", error);
     }
 );
 
-// 6. IMPLEMENTACIÓN DE RAYCASTING PARA SELECCIÓN
+// ==========================================
+// 6. RAYCASTING Y SELECCIÓN (Puntos 10 y 11)
+// ==========================================
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-const selectionDisplay = document.getElementById('selection-display');
+const infoText = document.getElementById('info-text');
+const objectDetails = document.getElementById('object-details');
+const detailName = document.getElementById('detail-name');
 
-window.addEventListener('click', (event) => {
-    // Calcular la posición del mouse en coordenadas normalizadas bidimensionales (-1 a +1)
+let selectedObject = null;
+let originalColor = new THREE.Color();
+
+window.addEventListener('pointerdown', (event) => {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-    // Actualizar el rayo según la cámara y la posición del mouse
     raycaster.setFromCamera(mouse, camera);
-
-    // Calcular los objetos que intersectan el rayo
-    const intersects = raycaster.intersectObjects(interactiveObjects, true);
+    const intersects = raycaster.intersectObjects(interactableObjects, true);
 
     if (intersects.length > 0) {
         const hitObject = intersects[0].object;
-        // Identificar el nombre (sea propio o asignado en el userData del modelo externo)
-        const objectName = hitObject.userData.parentName || hitObject.name || "Objeto Desconocido";
-        
-        // ACCIÓN VISIBLE 1: Mostrar información en pantalla a través de la UI
-        selectionDisplay.innerText = `Seleccionado: ${objectName}`;
-        selectionDisplay.style.background = "rgba(0, 255, 200, 0.2)";
-        selectionDisplay.style.borderLeftColor = "#00ffcc";
-        selectionDisplay.style.color = "#00ffcc";
 
-        // ACCIÓN VISIBLE 2: Imprimir información detallada en consola
-        console.log(`🎯 ¡Objeto Seleccionado! Nombre: ${objectName}`, hitObject);
-
-        // ACCIÓN VISIBLE 3: Flash de color de feedback interactivo temporal (Emissive)
-        if (hitObject.material && hitObject.material.emissive) {
-            const origColor = hitObject.material.emissive.getHex();
-            hitObject.material.emissive.setHex(0x555555);
-            setTimeout(() => {
-                hitObject.material.emissive.setHex(origColor);
-            }, 300);
+        // Restaurar color del objeto anteriormente seleccionado
+        if (selectedObject && selectedObject.material && selectedObject.material.color) {
+            selectedObject.material.color.copy(originalColor);
         }
+
+        selectedObject = hitObject;
+
+        // Resaltado: Cambiar color visiblemente
+        if (selectedObject.material && selectedObject.material.color) {
+            originalColor.copy(selectedObject.material.color);
+            selectedObject.material.color.setHex(0xffea00); // Amarillo de selección
+        }
+
+        let objName = selectedObject.name;
+        if ((!objName || objName.includes("Parte")) && selectedObject.parent && selectedObject.parent.name) {
+            objName = selectedObject.parent.name;
+        }
+
+        // Mostrar en UI
+        infoText.innerText = "¡Objeto detectado por Raycasting!";
+        detailName.innerText = objName || "Objeto 3D";
+        objectDetails.classList.remove('hidden');
+
+        // Imprimir en consola (Punto 11)
+        console.log("----------------------------------------");
+        console.log("[Raycaster] Objeto Seleccionado:", objName);
+        console.log("Instancia Mesh:", selectedObject);
+        console.log("Coordenadas de impacto:", intersects[0].point);
+        console.log("----------------------------------------");
     }
 });
 
-// 7. CICLO DE ANIMACIÓN (requestAnimationFrame)
-function animate() {
-    requestAnimationFrame(animate);
-
-    // Actualizar controles para el efecto Damping (frenado suave)
-    controls.update();
-
-    // Animación de las geometrías básicas
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-
-    // Efecto flotante para la esfera usando funciones trigonométricas
-    sphere.position.y = Math.sin(Date.now() * 0.0015) * 0.4 + 0.2;
-
-    // Renderizar escena con la cámara activa
-    renderer.render(scene, camera);
-}
-
-animate();
-
-// 8. REDIMENSIÓN RESPONSIVE DE LA VENTANA
+// Ajuste responsive
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// LÓGICA DE LA INTERFAZ DEL CUESTIONARIO (MODAL)
-const modal = document.getElementById('quiz-modal');
-const toggleBtn = document.getElementById('toggle-quiz-btn');
-const closeBtn = document.getElementById('close-modal');
+// ==========================================
+// 7. BUCLE DE ANIMACIÓN (Punto 8)
+// ==========================================
+const clock = new THREE.Clock();
 
-toggleBtn.addEventListener('click', () => {
-    modal.classList.toggle('hidden');
-});
+function animate() {
+    requestAnimationFrame(animate);
 
-closeBtn.addEventListener('click', () => {
-    modal.classList.add('hidden');
-});
+    const elapsedTime = clock.getElapsedTime();
 
-window.addEventListener('click', (e) => {
-    if (e.target === modal) {
-        modal.classList.add('hidden');
-    }
-});
+    // Animación de rotación y movimiento
+    cube.rotation.x = elapsedTime * 0.5;
+    cube.rotation.y = elapsedTime * 0.7;
+
+    sphere.position.y = 1 + Math.sin(elapsedTime * 2) * 0.3;
+
+    torus.rotation.x = elapsedTime * 0.4;
+    torus.rotation.z = elapsedTime * 0.3;
+
+    controls.update();
+    renderer.render(scene, camera);
+}
+
+animate();

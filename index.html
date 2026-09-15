@@ -3,79 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visor 3D Interactivo - Godinez & Chavarin</title>
+    <title>Visor 3D interactivo con Three.js</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Import Map para Three.js y sus módulos -->
     <script type="importmap">
         {
             "imports": {
                 "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com"
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
             }
         }
     </script>
 </head>
 <body>
-    <!-- Capa de Interfaz Informativa -->
-    <div class="ui-container">
-        <div class="info-panel">
-            <h2>Visor 3D Interactivo 🚀</h2>
-            <p><strong>Autores:</strong> Godinez & Chavarin</p>
-            <p><strong>Controles:</strong> Clic izquierdo + arrastrar para rotar. Rueda para zoom. Clic derecho para desplazar.</p>
-            <div id="selection-display" class="selection-box">Haz clic en un objeto para seleccionarlo</div>
-        </div>
-
-        <!-- Botón para abrir el cuestionario teórico -->
-        <button id="toggle-quiz-btn" class="quiz-btn">Ver Cuestionario Teórico</button>
-    </div>
-
-    <!-- Modal del Cuestionario Requerido en la Actividad -->
-    <div id="quiz-modal" class="modal hidden">
-        <div class="modal-content">
-            <span id="close-modal" class="close-btn">&times;</span>
-            <h2>Cuestionario de la Actividad</h2>
-            <hr>
-            
-            <div class="question">
-                <h3>1. ¿Qué función cumple la escena en Three.js?</h3>
-                <p>La escena (<code>THREE.Scene</code>) actúa como un contenedor tridimensional donde se colocan todos los objetos, luces, cámaras y fondos que formarán parte del mundo virtual. Sin ella, no habría un espacio físico digital para renderizar nada.</p>
-            </div>
-
-            <div class="question">
-                <h3>2. ¿Para qué sirve la cámara?</h3>
-                <p>La cámara define el punto de vista desde el cual el usuario observa el mundo 3D. Determina el campo de visión (FOV), la relación de aspecto y los límites de profundidad mediante los planos matemático-ópticos (near y far).</p>
-            </div>
-
-            <div class="question">
-                <h3>3. ¿Qué hace el renderer?</h3>
-                <p>El renderizador (<code>WebGLRenderer</code>) toma la escena junto con la cámara y calcula matemáticamente cómo se deben proyectar esos gráficos 3D en los píxeles 2D de la pantalla del navegador usando la GPU a través de WebGL.</p>
-            </div>
-
-            <div class="question">
-                <h3>4. ¿Qué permite hacer OrbitControls?</h3>
-                <p>Es un componente complementario que le permite al usuario interactuar intuitivamente con la cámara usando el mouse o gestos táctiles: rotar la perspectiva alrededor de un objetivo, hacer zoom de acercamiento/alejamiento y desplazar lateralmente (pan).</p>
-            </div>
-
-            <div class="question">
-                <h3>5. ¿Qué es el raycasting y para qué lo usaste?</h3>
-                <p>El Raycasting es una técnica geométrica que proyecta un rayo invisible desde la posición del puntero del mouse en la pantalla 2D hacia la profundidad del espacio 3D. Lo usamos para detectar con qué objetos de la escena colisiona o "cruza" dicho rayo, permitiendo la selección interactiva de objetos.</p>
-            </div>
-
-            <div class="question">
-                <h3>6. ¿Qué dificultades tuviste al cargar modelos .glb o .gltf?</h3>
-                <p>Las principales dificultades suelen ser las rutas relativas incorrectas al servidor local (errores 404), la falta de iluminación adecuada que hace que los modelos importados se rendericen completamente negros, y la escala o posición inicial desproporcionada del archivo de origen que lo oculta de la cámara.</p>
-            </div>
-
-            <div class="question">
-                <h3>7. ¿Cómo podrías usar este visor 3D en un proyecto de simulación, videojuegos, bioinformática o modelado 3D?</h3>
-                <p><strong>Videojuegos:</strong> Como base para un motor gráfico web o visor de inventario de personajes. <br>
-                <strong>Simulación:</strong> Para recrear entornos físicos industriales o arquitectónicos interactivos. <br>
-                <strong>Bioinformática:</strong> Para el modelado molecular y visualización interactiva de estructuras de proteínas o cadenas de ADN. <br>
-                <strong>Modelado 3D:</strong> Como un showroom digital interactivo o e-commerce para mostrar productos desde cualquier ángulo.</p>
-            </div>
+    <!-- Overlay UI para mostrar detalles de selección (Punto 11) -->
+    <div id="ui-container">
+        <h1>Visor 3D Interactivo</h1>
+        <p id="info-text">Haz clic en un objeto para seleccionarlo</p>
+        <div id="object-details" class="hidden">
+            <span id="detail-tag">Objeto</span>
+            <span id="detail-name">-</span>
         </div>
     </div>
 
-    <!-- Script Principal -->
+    <!-- Script principal -->
     <script type="module" src="main.js"></script>
 </body>
 </html>
