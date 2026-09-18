@@ -170,6 +170,9 @@ window.addEventListener('pointerdown', (event) => {
     if (intersects.length > 0) {
         const hitObject = intersects[0].object;
 
+        // Si hacemos clic en el mismo objeto que ya está seleccionado, no hacemos nada
+        if (selectedObject === hitObject) return;
+
         // Restaurar color del objeto anteriormente seleccionado
         if (selectedObject && selectedObject.material && selectedObject.material.color) {
             selectedObject.material.color.copy(originalColor);
@@ -177,7 +180,7 @@ window.addEventListener('pointerdown', (event) => {
 
         selectedObject = hitObject;
 
-        // Resaltado: Cambiar color visiblemente
+        // Resaltado: Guardar color original y cambiar a amarillo visiblemente
         if (selectedObject.material && selectedObject.material.color) {
             originalColor.copy(selectedObject.material.color);
             selectedObject.material.color.setHex(0xffea00); // Amarillo de selección
@@ -188,17 +191,21 @@ window.addEventListener('pointerdown', (event) => {
             objName = selectedObject.parent.name;
         }
 
-        // Mostrar en UI
         infoText.innerText = "¡Objeto detectado por Raycasting!";
         detailName.innerText = objName || "Objeto 3D";
         objectDetails.classList.remove('hidden');
 
-        // Imprimir en consola (Punto 11)
         console.log("----------------------------------------");
         console.log("[Raycaster] Objeto Seleccionado:", objName);
-        console.log("Instancia Mesh:", selectedObject);
         console.log("Coordenadas de impacto:", intersects[0].point);
         console.log("----------------------------------------");
+    } else {
+        if (selectedObject && selectedObject.material && selectedObject.material.color) {
+            selectedObject.material.color.copy(originalColor);
+        }
+        selectedObject = null;
+        infoText.innerText = "Haz clic en un objeto para seleccionarlo";
+        objectDetails.classList.add('hidden');
     }
 });
 
@@ -233,3 +240,24 @@ function animate() {
 }
 
 animate();
+
+// ==========================================
+// 8. LÓGICA DE LA VENTANA FLOTANTE (Modal)
+// ==========================================
+const btnRespuestas = document.getElementById('btn-respuestas');
+const modalRespuestas = document.getElementById('modal-respuestas');
+const closeModal = document.getElementById('close-modal');
+
+btnRespuestas.addEventListener('click', () => {
+    modalRespuestas.classList.remove('hidden');
+});
+
+closeModal.addEventListener('click', () => {
+    modalRespuestas.classList.add('hidden');
+});
+
+window.addEventListener('click', (event) => {
+    if (event.target === modalRespuestas) {
+        modalRespuestas.classList.add('hidden');
+    }
+});

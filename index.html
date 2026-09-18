@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visor 3D interactivo con Three.js</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧊</text></svg>">
+    
     <link rel="stylesheet" href="style.css">
     
-    <!-- Import Map para Three.js y sus módulos -->
     <script type="importmap">
         {
             "imports": {
@@ -17,17 +19,56 @@
     </script>
 </head>
 <body>
-    <!-- Overlay UI para mostrar detalles de selección (Punto 11) -->
     <div id="ui-container">
         <h1>Visor 3D Interactivo</h1>
         <p id="info-text">Haz clic en un objeto para seleccionarlo</p>
+        
         <div id="object-details" class="hidden">
             <span id="detail-tag">Objeto</span>
             <span id="detail-name">-</span>
         </div>
+
+        <div class="authors">
+            Desarrollado por: Chavarin & Godinez
+        </div>
+
+        <button id="btn-respuestas" class="btn-green">Ver Respuestas</button>
     </div>
 
-    <!-- Script principal -->
+    <div id="modal-respuestas" class="modal-overlay hidden">
+        <div class="modal-content">
+            <span id="close-modal" class="close-btn">&times;</span>
+            <h2>Respuestas de la Actividad</h2>
+            
+            <div class="qna-section">
+                <h3>¿Qué función cumple la escena en Three.js?</h3>
+                <p>Actúa como un contenedor principal o mundo virtual. Es el espacio donde colocamos todos nuestros objetos (geometrías, luces y cámaras) para que el motor sepa qué renderizar.</p>
+
+                <h3>¿Para qué sirve la cámara?</h3>
+                <p>Define el punto de vista desde el cual observamos la escena. Determina qué parte del mundo 3D es visible basándose en su campo de visión y posición.</p>
+
+                <h3>¿Qué hace el renderer?</h3>
+                <p>Es el motor de dibujo. Toma la escena y la cámara, procesa los cálculos matemáticos de iluminación y geometrías, y dibuja el resultado final como píxeles 2D en la pantalla mediante WebGL.</p>
+
+                <h3>¿Qué permite hacer OrbitControls?</h3>
+                <p>Permite al usuario interactuar fluidamente con la cámara usando el mouse para orbitar (rotar), hacer paneo y zoom (acercar/alejar) alrededor de un punto central.</p>
+
+                <h3>¿Qué es el raycasting y para qué lo usaste?</h3>
+                <p>Es una técnica que traza un "rayo" invisible desde la cámara pasando por la posición del mouse hacia el mundo 3D para detectar colisiones. Se usó para saber en qué objeto 3D hace clic el usuario y así resaltarlo.</p>
+
+                <h3>¿Qué dificultades tuviste al cargar modelos .glb o .gltf?</h3>
+                <p>Los principales retos suelen ser los errores de seguridad de navegador (CORS) si no se usa un servidor local, ajustar la escala correcta del modelo para que no sea invisiblemente pequeño o gigante, y asegurar que los materiales reaccionen bien a la iluminación de la escena.</p>
+
+                <h3>¿Cómo podrías usar este visor 3D en otros proyectos?</h3>
+                <ul>
+                    <li><b>Bioinformática:</b> Visualización interactiva de estructuras moleculares o proteínas complejas.</li>
+                    <li><b>Simulación:</b> Mostrar representaciones en tiempo real del estado de un almacén o envíos logísticos.</li>
+                    <li><b>Videojuegos/Modelado:</b> Como visor rápido en el navegador para aprobar <i>assets</i> y diseños antes de integrarlos al motor de juego.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="main.js"></script>
 </body>
 </html>

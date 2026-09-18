@@ -69,3 +69,112 @@ h1 {
     font-weight: 500;
     color: #ffffff;
 }
+
+.authors {
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    font-size: 0.8rem;
+    color: #888;
+    text-align: right;
+    font-style: italic;
+}
+
+.btn-green {
+    margin-top: 15px;
+    width: 100%;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.1s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    pointer-events: auto; 
+}
+.btn-green:hover {
+    background-color: #218838;
+}
+
+.btn-green:active {
+    transform: scale(0.98);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden, .modal-overlay.hidden {
+    display: none !important;
+}
+
+.modal-content {
+    background: #1a1c23;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 650px;
+    max-height: 85vh; 
+    overflow-y: auto;
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.8rem;
+    color: #a0a0b0;
+    cursor: pointer;
+    transition: color 0.3s;
+    line-height: 1;
+}
+
+.close-btn:hover {
+    color: #ff4757; 
+}
+
+.modal-content h2 {
+    color: #4facfe;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 10px;
+}
+
+.qna-section h3 {
+    font-size: 1rem;
+    color: #00f2fe;
+    margin-top: 18px;
+    margin-bottom: 6px;
+}
+
+.qna-section p {
+    font-size: 0.95rem;
+    color: #d1d1e0;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.qna-section ul {
+    margin-left: 20px;
+    margin-top: 5px;
+    color: #d1d1e0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
